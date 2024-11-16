@@ -3,6 +3,10 @@ const bodyParser = require('body-parser');
 const { createUser, handleLogin, getUser, forgotPassword, resetPassword } = require('../controllers/userController');
 const routerAPI = express.Router();
 
+ // Middleware để parse JSON và URL-encoded data
+routerAPI.use(express.json());  // Parse application/json
+routerAPI.use(express.urlencoded({ extended: true }));
+
 routerAPI.get("/", (req, res) => {
     return res.status(200).json("Hello world api");
 });
