@@ -29,21 +29,27 @@ const getUser = async (req, res) => {
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
-        
+
         if (!email) {
-            return res.status(400).json({ message: "Email is required" });
+            return res.status(400).json({ success: false});
         }
-        
+
         const user = await findUserByEmail(email);
-        if (!user) return res.status(404).json({ message: 'User does not exist' });
+        if (!user) {
+            return res.status(404).json({ success: false});
+        }
 
         const token = createResetToken(user.id);
-        await sendResetEmail(email, token);
+        const emailSent = await sendResetEmail(email, token);
 
-        res.status(200).json({ message: 'Password reset email sent' });
+        if (emailSent) {
+            return res.status(200).json({ success: true});
+        } else {
+            return res.status(500).json({ success: false});
+        }
     } catch (error) {
         console.error("Forgot password error:", error);
-        res.status(500).json({ message: "An error occurred" });
+        return res.status(500).json({ success: false});
     }
 };
 
