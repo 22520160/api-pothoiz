@@ -5,6 +5,9 @@ const apiRoutes = require('./routes/api');
 const connection = require('./config/database');
 const bodyParser = require('body-parser');
 const { getHomepage } = require('./controllers/homeController');
+const cors = require('cors');
+//config cors
+app.use(cors())
 
 const app = express();
 const port = process.env.PORT || 8888;
