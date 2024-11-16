@@ -85,8 +85,7 @@ const loginService = async (email1, password) => {
                 );
 
                 return {
-                    EM: "Login successful",
-                    access_token
+                    EM: "Login successful"
                 };
             } else {
                 return {
