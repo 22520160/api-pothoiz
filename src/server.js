@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 8888;
 
 //config cors
-app.use(cors())
+app.use(cors({ origin: '*' }))
 //config req.body
 app.use(express.json()) // for json
 app.use(express.urlencoded({ extended: true })) // for form data
