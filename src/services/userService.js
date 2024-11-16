@@ -17,7 +17,7 @@ function createResetToken(userId) {
 
 // Hàm gửi email đặt lại mật khẩu
 function sendResetEmail(userEmail, token) {
-    const resetLink = `http://localhost:8080/v1/api/reset-password?token=${token}`;
+    const resetLink = `https://api-pothoiz.onrender.com/v1/api/reset-password?token=${token}`;
     return mailjet.post('send', { version: 'v3.1' }).request({
         Messages: [
             {
