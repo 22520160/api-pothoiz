@@ -35,22 +35,23 @@ const createUserService = async (name, email, password) => {
     try {
         const user = await User.findOne({ email });
         if (user) {
-            console.log(">>> email đã được sử dụng, vui lòng chọn email khác");
-            return null;
+            return { success: false};
         }
-
         // Lưu mật khẩu mà không mã hóa
         const result = await User.create({
             name,
             email,
             password
         });
-        return result;
+        if (result) {
+            return { success: true};
+        } else {
+            return { success: false};
+        }
     } catch (error) {
-        console.log(error);
-        return null;
+        return { success: false};
     }
-}
+};
 
 // Hàm tìm người dùng qua email
 const findUserByEmail = async (email) => {
