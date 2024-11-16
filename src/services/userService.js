@@ -43,8 +43,7 @@ const createUserService = async (name, email, password) => {
         const result = await User.create({
             name,
             email,
-            password,
-            role: "Chua biet"
+            password
         });
         return result;
     } catch (error) {
