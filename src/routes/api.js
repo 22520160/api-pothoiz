@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { createUser, handleLogin, getUser, forgotPassword, resetPassword } = require('../controllers/userController');
+const { findUserByEmail } = require('../services/userService');
 const routerAPI = express.Router();
 
  // Middleware để parse JSON và URL-encoded data
@@ -95,5 +96,28 @@ routerAPI.get('/reset-password', (req, res) => {
 
     `);
 });
+routerAPI.get('/username', async (req, res) => {
+    const email = req.query.email;
 
+    // Kiểm tra email có được truyền hay không
+    if (!email) {
+        return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    try {
+        // Gọi hàm findUserByEmail
+        const user = await findUserByEmail(email);
+
+        // Kiểm tra nếu không tìm thấy người dùng
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Trả về thông tin username
+        res.status(200).json({ success: true, email: user.email, username: user.name });
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 module.exports = routerAPI;
