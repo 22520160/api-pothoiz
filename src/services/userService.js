@@ -127,7 +127,28 @@ const updateUserPassword = async (userId, newPassword) => {
     }
 };
 
+const updateUser = async (email, data) => {
+    try {
+      // Tìm và cập nhật user theo email
+      const updatedUser = await User.findOneAndUpdate(
+        { email: email }, // Điều kiện tìm kiếm
+        { 
+          name: data.name, 
+          password: data.password 
+        }, // Dữ liệu cần cập nhật
+        { new: true } // Tùy chọn: trả về bản ghi đã cập nhật
+      );
+  
+      // Trả về người dùng đã được cập nhật
+      return updatedUser;
+    } catch (error) {
+      console.error('Lỗi trong quá trình cập nhật user:', error);
+      throw error; // Ném lỗi để xử lý bên ngoài
+    }
+  };
+
 module.exports = {
+    updateUser,
     createUserService,
     loginService,
     getUserService,
