@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { createUser, handleLogin, getUser, forgotPassword, resetPassword } = require('../controllers/userController');
-const { findUserByEmail } = require('../services/userService');
+const { findUserByEmail, updateUser } = require('../services/userService');
 const routerAPI = express.Router();
 
  // Middleware để parse JSON và URL-encoded data
@@ -119,5 +119,35 @@ routerAPI.get('/username', async (req, res) => {
         console.error("Error fetching user:", error);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
+});
+
+// API POST để cập nhật username và password
+routerAPI.post('/update-user', async (req, res) => {
+    const { name, email, password } = req.body;
+
+  // Kiểm tra đầu vào
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ name, email và password.' });
+  }
+
+  try {
+    // Tìm người dùng theo email
+    const user = await findUserByEmail(email);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Không tìm thấy tài khoản với email được cung cấp.' });
+    }
+
+    // Cập nhật name và password
+    const updatedUser = await updateUser(email, { name, password });
+
+    return res.status(200).json({
+      message: 'Thông tin tài khoản đã được cập nhật thành công.',
+  
+    });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return res.status(500).json({ message: 'Đã xảy ra lỗi khi cập nhật tài khoản.' });
+  }
 });
 module.exports = routerAPI;
